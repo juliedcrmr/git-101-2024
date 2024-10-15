@@ -287,3 +287,47 @@ sugar_stats <- white_wine |>
           mean(`residual sugar`))
 ```
 
+## Group by
+```{r}
+white_wine |>
+  summarise(median(`residual sugar`),
+            .by = quality)
+```
+```{r}
+white_wine |>
+  summarise(median(`residual sugar`),
+            .by = quality) |>
+  arrange(quality)
+```
+```{r}
+white_wine |>
+  summarise(median(`residual sugar`),
+            n(),
+            .by = quality) |>
+  arrange(quality)
+```
+
+```{r}
+white_wine |>
+  mutate(ha = alcohol >= 13 ) |> ## ha stands for high alcohol
+  summarise(median(`residual sugar`),
+            n(),
+            .by = ha)
+```
+
+```{r}
+white_wine |>
+  mutate(alcohol_class = cut(alcohol, breaks=c(7, 9, 10, 12, 13, 15)) ) |> ## breaks are cut points between the intervals of the data set
+  summarise(median(`residual sugar`),
+            n(),
+            .by = alcohol_class)
+```
+
+```{r}
+white_wine |>
+  mutate(alcohol_class = cut(alcohol, breaks=c(7, 9, 10, 12, 13, 15),
+                             ordered_results = TRUE)) |> 
+  summarise(median(`residual sugar`),
+            n(),
+            .by = alcohol_class)
+```

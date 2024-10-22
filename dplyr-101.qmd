@@ -2,8 +2,9 @@
 title: "Dplyr 101"
 author: "Fabrice Rossi"
 format: 
-  html:
-    code-fold: true
+  html: default
+  docx: default
+  pdf: default
 ---
 
 ```{r}
@@ -330,4 +331,64 @@ white_wine |>
   summarise(median(`residual sugar`),
             n(),
             .by = alcohol_class)
+```
+
+```{r}
+white_wine |>
+  mutate(alcohol_class = cut(alcohol, breaks=c(7, 9, 10, 12, 13, 15),
+                             ordered_results = TRUE)) |> 
+  ggplot(aes(x=alcohol_class)) +
+  geom_bar()
+```
+
+```{r}
+ggplot(white_wine,aes(x=alcohol,y=quality))+
+  geom_boxplot()
+```
+
+```{r}
+white_wine |>
+  mutate(alcohol_class = cut(alcohol, breaks=c(7, 9, 10, 12, 13, 15),
+                             ordered_results = TRUE)) |> 
+  ggplot(aes(x=alcohol_class, fill=quality)) +
+  geom_bar(position="fill")
+```
+
+```{r}
+white_wine |> 
+  pull(alcohol) |>
+  quantile(probs = seq(0, 1, by = 0.2))
+```
+```{r}
+## let's put that into a variable
+alcohol_quantiles <-
+  white_wine |> 
+  pull(alcohol) |>
+  quantile(probs = seq(0, 1, by = 0.1))
+alcohol_quantiles
+```
+```{r}
+## I want the first value to be smaller
+alcohol_quantiles[1] <- alcohol_quantiles[1] - 1
+alcohol_quantiles
+```
+```{r}
+## I want the first value to be smaller
+alcohol_quantiles[1] <- alcohol_quantiles[1] - 1
+alcohol_quantiles
+```
+
+```{r}
+white_wine |>
+  mutate(alcohol_class = cut(alcohol, breaks=alcohol_quantiles),
+                             ordered_results = TRUE) |> 
+  ggplot(aes(x=alcohol_class)) +
+  geom_bar()
+```
+```{r}
+white_wine |>
+  mutate(alcohol_class = cut(alcohol, breaks=alcohol_quantiles),
+                             ordered_results = TRUE) |> 
+  ggplot(aes(x=alcohol_class, fill = quality)) +
+  geom_bar(position= "fill")
 ```
